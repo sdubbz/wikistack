@@ -1,25 +1,32 @@
 const express = require("Express");
-const morgan = require("Morgan");
+const morgan = require("morgan");
 const app = express();
-const runMorgan = morgan();
 const port = 1337;
 
-// const expressStatic = require("express.static");
-// const expressURL = require("Express.urlencoded");
+const { db, Page, User } = require("./models");
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+app.use(morgan());
+
+app.use(express.static(__dirname + "./stylesheets"));
+
+app.use(express.urlencoded({ extended: false }));
+
+db.authenticate().then(() => {
+  console.log("connected to the database");
 });
 
 app.get("/", (req, res) => {
   res.send(`
-      <html>
-       <head>
-         <title>My site</title>
-       </head>
-       <body>
-         <h1>Hello World</h1>
-       </body>
-      </html>
+testing
     `);
 });
+
+const init = async () => {
+  await db.sync({ force: true });
+  // make sure that you have a PORT constant
+  app.listen(port, () => {
+    console.log(`Server is listening on port ${port}!`);
+  });
+};
+
+init();
