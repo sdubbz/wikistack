@@ -1,11 +1,18 @@
-const express = require("Express");
+const express = require("express");
 const morgan = require("morgan");
+const wikiRouter = require('./routes/wiki');
+const userRouter = require('./routes/users');
+
 const app = express();
 const port = 1337;
 
 const { db, Page, User } = require("./models");
 
 app.use(morgan());
+
+app.use('/wiki', wikiRouter);
+
+app.use('/users', userRouter);
 
 app.use(express.static(__dirname + "./stylesheets"));
 
